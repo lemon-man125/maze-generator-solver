@@ -1,8 +1,23 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
 
 canvas {
   display: block;
+}
+
+.wrapper {
+  padding: 10px;
+  margin-left: 10px;
+  width: 40vw;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.res,
+.multiply {
+  width: 40px;
 }

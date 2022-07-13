@@ -63,6 +63,7 @@ class AStar {
     //   }
     // }
     if (drawDebug) {
+      console.log("running");
       for (const city of this.closedSet) {
         city.show(color(255, 0, 0));
       }

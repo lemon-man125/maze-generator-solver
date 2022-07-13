@@ -56,13 +56,13 @@ class Cell {
       this.walls[key].show();
     }
 
-    if (this.visited && !mazeGenerator.finished && !this.animating) {
+    if (this.visited && !mazeGenerator.finished && showVisited) {
       noStroke();
       fill(255, 0, 255, 100);
       rect(this.pos.x, this.pos.y, this.res);
     }
 
-    if (mazeGenerator.finished && col && !this.animating) {
+    if (mazeGenerator.finished && col) {
       noStroke();
       fill(col);
       rect(this.pos.x, this.pos.y, this.res);

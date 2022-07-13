@@ -2,17 +2,62 @@ let mazeGenerator;
 
 let astar;
 
-const drawDebug = false;
+let running = false;
+
+let drawDebug;
 
 let rows, cols;
 
 let grid;
 
-const res = 10;
+let res = 0;
+
+let multiply;
+
+let showVisited;
+
+let bestHeuristic;
 
 function setup() {
   createCanvas(800, 800);
 
+  background(51);
+
+  const wrapper = document.querySelector(".wrapper");
+  const resInput = document.querySelector(".res");
+  const debugInput = document.querySelector(".debug");
+  const bestHeuristicInput = document.querySelector(".heuristic");
+  const multiplyInput = document.querySelector(".multiply");
+  const showVisitedInput = document.querySelector(".showVisited");
+  const startButton = document.querySelector(".start");
+
+  resInput.value = getItem("res") || "40";
+  debugInput.checked = getItem("debug") || false;
+  bestHeuristicInput.checked = getItem("bestHeuristic") || false;
+  multiplyInput.value = getItem("multiply") || "1";
+  showVisitedInput.checked = getItem("showVisited") || false;
+
+  startButton.addEventListener("click", () => {
+    res = parseInt(resInput.value);
+    drawDebug = debugInput.checked;
+    bestHeuristic = bestHeuristicInput.checked;
+    multiply = parseInt(multiplyInput.value);
+    showVisited = showVisitedInput.checked;
+    console.log(res, drawDebug, bestHeuristic, multiply, showVisited);
+
+    storeItem("res", res.toString());
+    storeItem("debug", drawDebug);
+    storeItem("bestHeuristic", bestHeuristic);
+    storeItem("multiply", multiply);
+    storeItem("showVisited", showVisited);
+
+    wrapper.style.display = "none";
+    ready();
+    running = true;
+  });
+}
+
+function ready() {
   rows = height / res;
   cols = width / res;
 
@@ -28,14 +73,13 @@ function setup() {
   mazeGenerator = new MazeGenerator(rows, cols, res, grid);
 
   console.log(grid);
-
-  //frameRate(5);
 }
 
 function draw() {
+  if (!running) return;
   background(51);
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < multiply; i++) {
     mazeGenerator.update();
   }
   mazeGenerator.show();
@@ -80,8 +124,8 @@ function getNeighbor(arr) {
 }
 
 function heuristic(start, end) {
+  if (bestHeuristic) return abs(start.col - end.col) + abs(start.row - end.row);
   return dist(start.row, start.col, end.row, end.col);
-  //return abs(start.col - end.col) + abs(start.row - end.row);
 }
 
 function wallBetween(a, b) {
