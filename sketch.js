@@ -18,6 +18,16 @@ let showVisited;
 
 let bestHeuristic;
 
+let riverIdle;
+let riverWalking;
+
+let showRiver = false;
+
+function preload() {
+  riverIdle = loadImage("RiverIdle.png");
+  riverWalking = loadImage("RiverWalking.png");
+}
+
 function setup() {
   createCanvas(800, 800);
 
@@ -29,6 +39,7 @@ function setup() {
   const bestHeuristicInput = document.querySelector(".heuristic");
   const multiplyInput = document.querySelector(".multiply");
   const showVisitedInput = document.querySelector(".showVisited");
+  const showRiverInput = document.querySelector(".showRiver");
   const startButton = document.querySelector(".start");
 
   resInput.value = getItem("res") || "40";
@@ -36,6 +47,7 @@ function setup() {
   bestHeuristicInput.checked = getItem("bestHeuristic") || false;
   multiplyInput.value = getItem("multiply") || "1";
   showVisitedInput.checked = getItem("showVisited") || false;
+  showRiverInput.checked = getItem("showRiver") || false;
 
   startButton.addEventListener("click", () => {
     res = parseInt(resInput.value);
@@ -43,13 +55,22 @@ function setup() {
     bestHeuristic = bestHeuristicInput.checked;
     multiply = parseInt(multiplyInput.value);
     showVisited = showVisitedInput.checked;
-    console.log(res, drawDebug, bestHeuristic, multiply, showVisited);
+    showRiver = showRiverInput.checked;
+    console.log(
+      res,
+      drawDebug,
+      bestHeuristic,
+      multiply,
+      showVisited,
+      showRiver
+    );
 
     storeItem("res", res.toString());
     storeItem("debug", drawDebug);
     storeItem("bestHeuristic", bestHeuristic);
-    storeItem("multiply", multiply);
+    storeItem("multiply", multiply.toString());
     storeItem("showVisited", showVisited);
+    storeItem("showRiver", showRiver);
 
     wrapper.style.display = "none";
     ready();
@@ -58,8 +79,8 @@ function setup() {
 }
 
 function ready() {
-  rows = height / res;
-  cols = width / res;
+  rows = ceil(height / res);
+  cols = ceil(width / res);
 
   grid = Array(rows)
     .fill()
@@ -84,7 +105,10 @@ function draw() {
   }
   mazeGenerator.show();
 
+  if (!mazeGenerator.finished && showRiver) image(riverIdle, 0, 0, res, res);
+
   if (!mazeGenerator.finished) return;
+  if (res >= 10) frameRate(10);
   //frameRate(5);
   //console.log("yay");
   astar.update();

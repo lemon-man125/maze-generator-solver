@@ -72,6 +72,7 @@ class AStar {
         city.show(color(0, 255, 0));
       }
     }
+    if (showRiver) return;
     this.path = [];
     let temp = this.current;
     this.path.push(temp);

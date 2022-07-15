@@ -68,6 +68,9 @@ class Cell {
       rect(this.pos.x, this.pos.y, this.res);
     }
 
+    if (mazeGenerator.finished && showRiver && astar.current == this)
+      image(riverWalking, this.pos.x, this.pos.y, this.res, this.res);
+
     if (mazeGenerator.current != this) return;
     noStroke();
     fill(0, 255, 0, 150);
