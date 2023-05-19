@@ -21,6 +21,9 @@ let bestHeuristic;
 let riverIdle;
 let riverWalking;
 
+let startSolvingButton;
+let solving = false;
+
 let showRiver = false;
 
 function preload() {
@@ -96,6 +99,13 @@ function ready() {
   console.log(grid);
 }
 
+function createSolveEvent() {
+  startSolvingButton.mousePressed(() => {
+    solving = true;
+    loop();
+  });
+}
+
 function draw() {
   if (!running) return;
   background(51);
@@ -107,12 +117,26 @@ function draw() {
 
   if (!mazeGenerator.finished && showRiver) image(riverIdle, 0, 0, res, res);
 
-  if (!mazeGenerator.finished) return;
-  if (res >= 10) frameRate(10);
-  //frameRate(5);
-  //console.log("yay");
-  astar.update();
-  astar.show();
+  finished: if (mazeGenerator.finished) {
+    startSolvingButton = createButton("Start");
+    if (solving == false) {
+      console.log(startSolvingButton, "getting request");
+      createSolveEvent();
+      noLoop();
+      return;
+    }
+
+    console.log("starting");
+
+    startSolvingButton.remove();
+    startSolvingButton = null;
+
+    if (res >= 10) frameRate(10);
+    //frameRate(5);
+    //console.log("yay");
+    astar.update();
+    astar.show();
+  }
 }
 
 function removeWalls(a, b) {
